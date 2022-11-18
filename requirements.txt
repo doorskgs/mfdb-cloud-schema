@@ -1,0 +1,2 @@
+tomcru=0.1.0
+boto3

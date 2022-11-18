@@ -1,0 +1,99 @@
+{
+  "/oauth/me": {
+    "headers": {
+      "x-tesomsz": "ok"
+    },
+    "body": {
+      "isAuthorized": true,
+      "context": {
+        "admin": true,
+        "access_token": "{access_token}",
+        "uid": "00000000-0000-0000-0000-000000000000",
+        "username": "testuser",
+        "expires_in": 0,
+        "issued_at": 0,
+        "refresh_token": null,
+        "points": 99,
+        "principalId": "me"
+      }
+    }
+  },
+  "POST /oauth/token": {
+    "headers": {
+      "content-type": "text/plain"
+    },
+    "body": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZMQmxWV09veWVYVjhENE5YNVNwOXFTa05jX0daU1ZFSmVucXhXbktHdnMifQ.eyJhZG1pbiI6dHJ1ZSwiYWNjZXNzX3Rva2VuIjoie2FjY2Vzc190b2tlbn0iLCJ1aWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwicmVmcmVzaF90b2tlbiI6bnVsbCwicG9pbnRzIjo5OSwicHJpbmNpcGFsSWQiOiJtZSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTA1NS8iLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAvIiwiZXhwIjoyMDE2MjM5MDIyLCJuYmYiOjE2Njg1MzMwNDksImlhdCI6MTY2ODUzMzA0OSwic2NwIjoicHJvZmlsZSJ9.BMGX7tw2BBVEzeQXkuJ_P7yEV5J9rLB5kXrjjQK882OZuPYPcccMEYZ5S3Dh4gCRaQ2rvNfzicckcgceM_CzmMrYTHDt-m_mV9S7i261pmVmTiJwbTIXOFQvmAJPwWXJGL1mW2jwJ7aDmyUb-I0-kGAo2IN9Supk3M-uF21r673Ja7P5Hfk7BlBv3wB__VIKRpZ9-r76zwb1TyMUCf9rDDtoIF6UENuW7xJOPAwRjkF5stUducpOpYbegByVMX1teHjZJ2cdGxjwUQmXaAAgGFMTQztnrBtitdTv4rfKQZ-XYQY21tSw20Cy-g_OhgWoPlBzfFmHuLJmgszftCiyCw"
+  },
+  "/.well-known/jwks.json": {
+    "headers": {
+
+    },
+    "body": {
+      "keys": [
+        {
+          "kty": "RSA",
+          "e": "AQAB",
+          "use": "sig",
+          "kid": "fLBlVWOoyeXV8D4NX5Sp9qSkNc_GZSVEJenqxWnKGvs",
+          "alg": "RS256",
+          "n": "ngx-ks_6qaWatzz9ypUq8ztiAYcaazNw-MjrbaYVYxZr1SC7lvzMQVGkMxCSSUJGwGNUltABW-FSsFf9OBNqQNaY1hvZtQSbdVl-FZx2bdqovBTQQ801JP5eERwofRTFR3uQ-gdBUj3Go-dl314nTibc3It6pxw2u2JGLdzOss3fqW_ArE5QgePqAhvexiK0NB7h_BOxbSExuBuW-oiYWw5iRiBRJhFk9QwzXo--XShD8Rn0DCDRuISI8UehDIsAdjXvjBt-iiPlSMssFddmm9XaVoN35HUU5Cast-idPQ2QNitHB0UHEB4mxmg5HF8fVHjpNKzPSizoxMBAA5HBWw"
+        }
+      ]
+    }
+  },
+  "/.well-known/openid-configuration": {
+    "headers": {
+
+    },
+    "body": {
+      "authorization_endpoint": "http://localhost:5055/oauth/authorize",
+      "claims_supported": [
+        "email",
+        "email_verified",
+        "uid",
+        "username",
+        "points",
+        "face",
+        "aud",
+        "exp",
+        "iat",
+        "iss",
+        "sub"
+      ],
+      "code_challenge_methods_supported": [
+        "plain",
+        "S256"
+      ],
+      "grant_types_supported": [
+        "authorization_code",
+        "refresh_token",
+        "urn:ietf:params:oauth:grant-type:device_code",
+        "urn:ietf:params:oauth:grant-type:jwt-bearer"
+      ],
+      "id_token_signing_alg_values_supported": [
+        "RS256"
+      ],
+      "issuer": "http://localhost:5055/",
+      "jwks_uri": "http://localhost:5055/.well-known/jwks.json",
+      "response_types_supported": [
+        "code",
+        "token",
+        "none"
+      ],
+      "scopes_supported": [
+        "openid",
+        "email",
+        "profile"
+      ],
+      "subject_types_supported": [
+        "public"
+      ],
+      "token_endpoint": "http://localhost:5055/oauth/token",
+      "token_endpoint_auth_methods_supported": [
+        "client_secret_post",
+        "client_secret_basic"
+      ],
+      "userinfo_endpoint": "http://localhost:5055/oauth/me"
+    }
+  }
+}

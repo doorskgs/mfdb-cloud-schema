@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "mfdb-index"
+region = "eu-central-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+s3_prefix = "mfdb-index"
+s3_bucket = "aws-sam-dkgs-managed"
+image_repositories = []
