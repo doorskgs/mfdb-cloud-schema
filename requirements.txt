@@ -1,2 +1,2 @@
-tomcru=0.1.0
+tomcru~=0.1
 boto3

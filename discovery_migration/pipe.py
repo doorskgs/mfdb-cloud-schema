@@ -1,54 +1,79 @@
 import asyncio
+import math
 import os
+import time
 
+from eme.pipe import Producer
+from mfdb_parsinglib import EDBSource, MetaboliteDiscovery, MetaboliteConsistent
+from mfdb_parsinglib.dal import EDBRepository, get_repo, ctx
+
+from eme.entities import load_settings
 from eme.pipe import pipe_builder
-from eme.pipe.ProcessImpl import DBSaver
-from eme.pipe.ProcessImpl import CSVSaver
-
-from metabolite_index import MetaboliteDiscovery, EDBSource
-from metabolite_index.consistency import MetaboliteConsistent
+from eme.pipe.ProcessImpl import JSONLinesSaver
 
 from process.BulkDiscovery import BulkDiscovery
-from process.IdExplorer.IdExplorer import IdExplorer
-from process.IdExplorer.SkippedIdExplorer import SkippedIdExplorer
-from process.IdExplorer.SkippedIdSaver import SkippedIdSaver
+
+DB_CFG = load_settings(os.path.dirname(__file__) + '/db.ini')
+cfg_path = os.path.join(os.path.dirname(__file__), 'config')
+TABLE_NAME = 'edb_tmp'
+
+TASK_SPLIT = 10
+STOP_AT = None#4000
+remaining_ids = []
 
 
-def build_pipe():
-
+async def task_bulk_discovery(task_id: int, t1, edb_ids: list, json_saver):
     with pipe_builder() as pb:
-        pb.cfg_path = os.path.join(os.path.dirname(__file__), 'config')
+        pb.cfg_path = cfg_path
         pb.set_runner('serial')
 
         pb.add_processes([
-            IdExplorer('id_explorer', produces='edb_tag_id'),
-            SkippedIdExplorer('skipped_ids', produces='edb_tag_id'),
-
-            BulkDiscovery('bulk_discovery', consumes='edb_tag_id', produces=(
+            BulkDiscovery("bulk_discovery", consumes=(list, "edb_ids"), produces=(
                 (MetaboliteConsistent, "mdb"),
                 (MetaboliteDiscovery, "mdb_inconsistent"),
-                (tuple[EDBSource, str, str], "skipped_edb_tag_id_err")
+                (tuple[str, str, str], "skipped_id")
             )),
 
-            SkippedIdSaver("skipped_ids_saver", consumes=(tuple[EDBSource, str, str], "skipped_edb_tag_id_err")),
-            CSVSaver("mdb_csv", consumes=(MetaboliteConsistent, "mdb")),
-            #DBSaver("mdb_dump", consumes=(MetaboliteConsistent, "mdb"), table_name='mdb', conn=conn),
-            # Debug("debug_names", consumes=(MetaboliteExternal, "edb_dump")),
+            json_saver
         ])
         app = pb.build_app()
 
-    return app
+    print(f"TASK #{task_id}: Fetching {len(edb_ids)} records from KEGG...")
 
-if __name__ == "__main__":
-    from utils.ding import dingdingding
-
-    app = build_pipe()
-    mute = False
     app.debug = True
 
-    # draw_pipes_network(pipe, filename='spike', show_queues=True)
-    # debug_pipes(pipe)
-    asyncio.run(app.run())
+    app.start_flow(edb_ids, (list, "edb_ids"))
+    await app.run()
 
-    if not app.debug and not mute:
-        dingdingding()
+    print(f"Task #{task_id}: done!")
+
+async def main():
+    await ctx.initialize_db()
+
+    edb_ids = []
+    repo: EDBRepository = get_repo(MetaboliteConsistent)
+    async for edb_id, edb_source in repo.list_ids_iter(stop_at=STOP_AT):
+        edb_ids.append((edb_id, edb_source))
+
+    L = math.ceil(len(edb_ids) / TASK_SPLIT)
+
+    print(f"Spawning {TASK_SPLIT} tasks to process {len(edb_ids)} edb_ids")
+    t1 = time.time()
+
+    # shared JSON lines for one kegg dump file
+    json_disco_saver = JSONLinesSaver("json_saver", consumes=(MetaboliteConsistent, "mdb"))
+    def noop(): pass
+    json_disco_saver.dispose = noop
+
+    # spawn N tasks
+    tasks = [asyncio.create_task(task_bulk_discovery(i, t1, edb_ids[L * i:L * (i + 1)], json_disco_saver)) for i in range(TASK_SPLIT)]
+    await asyncio.gather(*tasks)
+
+    try:
+        json_disco_saver.fh.close()
+    except:
+        pass
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
