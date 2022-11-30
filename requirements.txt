@@ -1,2 +1,3 @@
-tomcru~=0.1
+tomcru~=0.2
 boto3
+tabulate

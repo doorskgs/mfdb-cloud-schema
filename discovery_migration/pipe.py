@@ -1,3 +1,7 @@
+"""
+This script executes bulk discovery on EDB items to create universal MDB items and save them in a discovery.json file
+"""
+
 import asyncio
 import math
 import os
@@ -17,8 +21,8 @@ DB_CFG = load_settings(os.path.dirname(__file__) + '/db.ini')
 cfg_path = os.path.join(os.path.dirname(__file__), 'config')
 TABLE_NAME = 'edb_tmp'
 
-TASK_SPLIT = 10
-STOP_AT = None#4000
+TASK_SPLIT = 5
+STOP_AT = None#400000
 remaining_ids = []
 
 
@@ -28,17 +32,13 @@ async def task_bulk_discovery(task_id: int, t1, edb_ids: list, json_saver):
         pb.set_runner('serial')
 
         pb.add_processes([
-            BulkDiscovery("bulk_discovery", consumes=(list, "edb_ids"), produces=(
-                (MetaboliteConsistent, "mdb"),
-                (MetaboliteDiscovery, "mdb_inconsistent"),
-                (tuple[str, str, str], "skipped_id")
-            )),
+            BulkDiscovery("bulk_discovery", consumes=(list, "edb_ids"), produces=(dict, "mdb")),
 
             json_saver
         ])
         app = pb.build_app()
 
-    print(f"TASK #{task_id}: Fetching {len(edb_ids)} records from KEGG...")
+    print(f"TASK #{task_id}: Discovering {len(edb_ids)} EDB records from local db...")
 
     app.debug = True
 
@@ -48,7 +48,7 @@ async def task_bulk_discovery(task_id: int, t1, edb_ids: list, json_saver):
     print(f"Task #{task_id}: done!")
 
 async def main():
-    await ctx.initialize_db()
+    await ctx.initialize_db(pool_size=(TASK_SPLIT, TASK_SPLIT))
 
     edb_ids = []
     repo: EDBRepository = get_repo(MetaboliteConsistent)
@@ -61,7 +61,7 @@ async def main():
     t1 = time.time()
 
     # shared JSON lines for one kegg dump file
-    json_disco_saver = JSONLinesSaver("json_saver", consumes=(MetaboliteConsistent, "mdb"))
+    json_disco_saver = JSONLinesSaver("json_saver", consumes=(dict, "mdb"))
     def noop(): pass
     json_disco_saver.dispose = noop
 

@@ -6,11 +6,7 @@ from mfdb_parsinglib.consistency import ConsistencyClass, get_consistency_class,
 
 class BulkDiscovery(Process):
     consumes = tuple[str, str], "edb_tag_id"
-    produces = (
-        (MetaboliteConsistent, "mdb"),
-        (MetaboliteDiscovery, "mdb_inconsistent"),
-        (tuple[str, str, str], "skipped_id")
-    )
+    produces = (dict, "mdb")
 
     def initialize(self):
         self.disco = discovery(self.cfg, verbose=self.app.debug and self.app.verbose)
@@ -36,7 +32,7 @@ class BulkDiscovery(Process):
                 }
 
                 # if consistent, save to consistent class for CSV/DB saving
-                yield _dict, self.produces[0] if is_consistent else self.produces[1]
+                yield _dict, self.produces
 
             except Exception as e:
                 if self.app.debug:
