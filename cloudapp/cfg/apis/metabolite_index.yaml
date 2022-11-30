@@ -7,80 +7,33 @@ info:
 servers:
   - url: http://petstore.swagger.io/v1
 paths:
-  /pets:
+  /metabolites:
     get:
-      summary: List all pets
-      operationId: listPets
+      summary: first attempt at getting metabolite
+      operationId: getMetabolite
       x-lambda:
-        lambda-id: pets/GetList
-        role: asd
-        layers:
-          - asd
-          - esd
+        lambda-id: metabolites/metabolite
+#        role: asd
+#        layers:
+#          - asd
+#          - esd
       tags:
-        - pets
+        - metabolites
       parameters:
-        - name: limit
+        - name: mid
           in: query
-          description: How many items to return at one time (max 100)
-          required: false
-          schema:
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: A paged array of pets
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Pets"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    post:
-      summary: Create a pet
-      operationId: createPets
-      x-lambda: pets/CreatePet
-      tags:
-        - pets
-      responses:
-        '201':
-          description: Null response
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /pets/{petId}:
-    get:
-      summary: Info for a specific pet
-      operationId: showPetById
-      x-lambda: pets/ViewPet
-      tags:
-        - pets
-      parameters:
-        - name: petId
-          in: path
+          description: Metabolite primary ID
           required: true
-          description: The id of the pet to retrieve
           schema:
             type: string
       responses:
         '200':
-          description: Expected response to a valid request
+          description: Metabolite view
+#          headers:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pet"
+                $ref: "#/components/schemas/Metabolite"
         default:
           description: unexpected error
           content:
@@ -89,7 +42,7 @@ paths:
                 $ref: "#/components/schemas/Error"
 components:
   schemas:
-    Pet:
+    Metabolite:
       type: object
       required:
         - id
@@ -102,10 +55,10 @@ components:
           type: string
         tag:
           type: string
-    Pets:
+    Metabolites:
       type: array
       items:
-        $ref: "#/components/schemas/Pet"
+        $ref: "#/components/schemas/Metabolite"
     Error:
       type: object
       required:
@@ -117,3 +70,12 @@ components:
           format: int32
         message:
           type: string
+#  securitySchemes:
+#    DoorsOIDC:
+#      type: openIdConnect
+#      openIdConnectUrl: http://localhost:5055/.well-known/openid-configuration
+#      x-oidc:
+#        audience:
+#          - http://localhost:5000/
+#        scopes:
+#          - profile

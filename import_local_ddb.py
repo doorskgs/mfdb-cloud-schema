@@ -4,8 +4,12 @@ and evaluating their consistency class and if MDB records belonging to the same 
 """
 import time
 
+from eme.mapper import map_to
 from eme.pipe.utils import print_progress
 from mfdb_parsinglib.consistency import ConsistencyClass
+from mfdb_parsinglib.views.MetaboliteConsistent import MetaboliteConsistent
+from mfdb_parsinglib.views.MetaboliteDiscovery import MetaboliteDiscovery
+
 from cloudapp.project import project
 import json
 from collections import defaultdict, Counter
@@ -65,9 +69,14 @@ with meta_table.batch_writer() as batch:
             mdb = mdbs[0]
             discovery_result = mdb.pop('result')
 
-            mdb['mid'] = str(mdb_id)
-
             if discovery_result['is_consistent'] == ConsistencyClass.Consistent.value:
+                # map to consistent view and save
+                disco = MetaboliteDiscovery(**mdb)
+                meta_consistent: MetaboliteConsistent = map_to(disco, MetaboliteConsistent)
+
+                mdb = meta_consistent.as_dict
+                mdb['mid'] = str(mdb_id)
+
                 # insert to DDB
                 batch.put_item(Item=mdb)
 

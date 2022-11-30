@@ -7,7 +7,7 @@ if __name__ == "__main__":
     try:
         _, api_name, env = sys.argv
     except:
-        api_name = 'doors_cloud'
+        api_name = 'metabolite_index'
         env = 'dev'
 
     project.debug_builders = True
