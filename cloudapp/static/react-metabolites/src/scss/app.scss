@@ -1,11 +1,27 @@
-.container {
-  height: 100vh;
-  background-color: #E7E3EB;
-  .header {
-      padding: 15px 20px;
-      background-color: #6200EE;
-      h1 {
-          color: #FFF;
-      }
-  }
-}
+
+// CVD-distinct flat UI colors from https://flatuicolors.com/palette/gb
+$blue:          #273c75;
+$cyan:          #00a8ff;
+$red:           #e84118;
+
+$white:         white;
+$light:         #dcdde1;
+$secondary:     #7f8fa6;
+$dark:          #353b48;
+$black:         #2f3640;
+
+// These two colors are not CVD distinct, it's advised to avoid using them
+$success:       #4cd137;//$blue;
+$warning:       #fbc531;//$red;
+
+$gray-100: $light;
+$gray-200: $light;
+$gray-300: $light;
+$gray-400: $secondary;
+$gray-500: $secondary;
+$gray-600: $secondary;
+$gray-700: $dark;
+$gray-800: $dark;
+$gray-900: $dark;
+
+@import "~bootstrap/scss/bootstrap";

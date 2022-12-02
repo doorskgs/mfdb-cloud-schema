@@ -1,5 +1,7 @@
 const path = require("path");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+//const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: [
@@ -7,11 +9,13 @@ module.exports = {
     __dirname + '/src/scss/app.scss'
   ],
   output: {
-    filename: "js/index.js",
+    filename: "js/index.min.js",
     path: path.resolve(__dirname, "public"),
   },
   plugins: [
-    new MiniCssExtractPlugin()
+    new MiniCssExtractPlugin({
+      filename: 'css/app.min.css'
+    })
   ],
   module: {
     rules: [
@@ -23,26 +27,50 @@ module.exports = {
       {
         test: /\.(s(a|c)ss)$/i,
         use: [
+         MiniCssExtractPlugin.loader,
+          // {
+          //   loader: 'style-loader'
+          // },
           {
-            loader: 'file-loader',
-            options: { outputPath: 'css/', name: '[name].min.css'}
+            loader: 'css-loader',
+            options: {
+              modules: false, // If this is true then I see the issue
+            }
           },
-          'sass-loader'
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: () => [
+                  require('autoprefixer')
+                ]
+              }
+            }
+          },
+          {
+            loader: 'sass-loader'
+          }
         ]
-        //use: ['style-loader', 'css-loader', 'sass-loader']
-        //use: [MiniCssExtractPlugin.loader,'css-loader']
       },
       {
         test: /\.(woff|woff2|ttf|eot|png|jpg|svg|gif)$/i,
-        use: ['file-loader']
+        use: ['file-loader'],
+        type: "asset",
       },
       {
         test: /\.txt$/,
-        use: 'raw-loader'
+        use: 'raw-loader',
+        type: "asset",
       }
     ],
   },
   resolve: {
     extensions: ["*", ".js", ".jsx"],
-  }
+  },
+  optimization: {
+    minimizer: [
+      `...`,
+      new CssMinimizerPlugin(),
+    ],
+  },
 };
