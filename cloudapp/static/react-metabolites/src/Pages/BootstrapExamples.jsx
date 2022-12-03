@@ -1,3 +1,4 @@
+import { Counter } from "../Components/Counter";
 
 const BootstrapExamples = () => <div className="container">
   <p className="bg-info text-info">.bg-info text-info</p>
@@ -12,6 +13,8 @@ const BootstrapExamples = () => <div className="container">
   <div className="card">
     <div className="card-body">
       Helloka sz
+
+      <Counter />
     </div>
   </div>
 </div>;
