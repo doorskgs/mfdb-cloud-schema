@@ -7,7 +7,6 @@ const init_state = {
 };
 
 export default (state = init_state, action) => {
-  console.log(state, action)
   switch (action.type) {
     case SET_COUNTER:
       return {
@@ -18,6 +17,4 @@ export default (state = init_state, action) => {
     default:
       return state;
   }
-
-  return state;
 };
