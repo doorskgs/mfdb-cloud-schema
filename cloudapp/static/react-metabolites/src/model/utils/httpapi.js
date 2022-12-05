@@ -23,19 +23,17 @@ export class HttpApi {
         // @todo: later: how to rate limit anonymous user?
         //   if (access_token == null)
         //     throw "access_token not provided";
-        console.log("KURVA ANYAD")
-        const method = group.split(' ')[0].upper();
-        console.log("KURVA ANYAD")
+        const method = group.split(' ')[0].toUpperCase();
 
         // normalize url to call
-        let _url = group.substr(len(method)+1, len(group));
+        let _url = group.substr(method.length+1, group.length);
         _url = _url.replace('//', '/');
         _url = _url.replace('//', '/');
         _url = _url.replace('//', '/');
         if (_url[0] == '/')
             _url = _url.substring(1);
 
-        if (method == 'GET') {
+        if (method == 'GET' && this.post_url) {
             data = Object.assign({}, this.post_url, data);
 
             if (Object.keys(data).length > 0)
@@ -48,8 +46,6 @@ export class HttpApi {
 
         if (this.access_token)
             headers['Authorization'] = 'bearer ' + this.access_token;
-
-            console.log("KURVA ANYAD")
 
         return fetch(this.base_url+_url, {
             method: method,

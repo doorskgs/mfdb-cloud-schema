@@ -4,6 +4,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 //const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
+  devtool: "source-map",
   entry: [
     __dirname + "/src/index.js",
     __dirname + '/src/scss/app.scss'
@@ -11,6 +12,7 @@ module.exports = {
   output: {
     filename: "js/index.min.js",
     path: path.resolve(__dirname, "public"),
+    //devtoolModuleFilenameTemplate: 'file:///[absolute-resource-path]'
   },
   plugins: [
     new MiniCssExtractPlugin({

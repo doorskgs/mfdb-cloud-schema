@@ -9,7 +9,7 @@ import Routing from "./Routing";
 import * as bootstrap from 'bootstrap'
 
 // @TODO: get cfg from env config
-createApiCaller('http://localhost:10050');
+createApiCaller('http://localhost:10050/api/v1');
 
 const root = createRoot(document.getElementById("root"));
 root.render(

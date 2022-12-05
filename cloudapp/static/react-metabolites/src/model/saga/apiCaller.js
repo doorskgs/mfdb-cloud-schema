@@ -12,12 +12,13 @@ export function setToken(tk) {
 
 export function getApiCaller(group) {
   // @TODO: refactor to use api
+  return api.request.bind(api);
 
-  return fetch(api.base_url, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-    }
-  }).then(response => response.json())
-    .catch((error) => {throw error})
+  // return fetch(api.base_url+'/'+group, {
+  //   method: 'GET',
+  //   headers: {
+  //       'Content-Type': 'application/json',
+  //   }
+  // }).then(response => response.json())
+  //   .catch((error) => {throw error})
 }
