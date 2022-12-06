@@ -5,11 +5,7 @@ import {
 } from '../actions';
 
 
-// @TODO: loading flag for each data?|
-//        or perhaps define a global REST loading scheme with saga
-//        and separate by data type in reducer?
 const init_state = {
-  loading: false
 };
 
 export default (state = init_state, action) => {

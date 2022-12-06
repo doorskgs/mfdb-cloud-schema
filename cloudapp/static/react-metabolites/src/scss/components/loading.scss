@@ -1,0 +1,21 @@
+.loading-spinner {
+  border: 12px solid $white;
+  border-radius: 50%;
+  border-top: 12px double $blue;
+  border-bottom: 12px double $blue;
+  width: 74px;
+  height: 74px;
+  -webkit-animation: spin 1.3s linear infinite;
+  animation: spin 1.3s linear infinite;
+  margin: 0 auto;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -1,6 +1,6 @@
 import { Counter } from "../Components/Counter";
 
-const BootstrapExamples = () => <div className="container">
+const BootstrapExamples = () => <div className="container page">
   <p className="bg-info text-info">.bg-info text-info</p>
   <p className="bg-primary text-primary">.bg-primary text-primary</p>
   <p className="bg-danger text-danger">.bg-danger text-danger</p>

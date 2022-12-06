@@ -25,3 +25,6 @@ $gray-800: $dark;
 $gray-900: $dark;
 
 @import "~bootstrap/scss/bootstrap";
+
+@import "./components/loading.scss";
+@import "./components/layout.scss";

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 
-const IndexPage = () => <div className="container">
+const IndexPage = () => <div className="container page">
   <h1>Hello tesomsz</h1>
   <p>You are viewing MFDB</p>
 

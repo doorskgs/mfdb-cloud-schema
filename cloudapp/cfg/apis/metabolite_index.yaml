@@ -8,7 +8,7 @@ servers:
   - url: http://localhost:10050/api/v1
     description: tomcru dev server
 paths:
-  /metabolites:
+  /metabolites/{mid}:
     get:
       summary: first attempt at getting metabolite
       operationId: getMetabolite
@@ -18,11 +18,14 @@ paths:
 #        layers:
 #          - asd
 #          - esd
+      x-integ:
+        requestParameters:
+          "query.mid": "path.mid"
       tags:
         - metabolites
       parameters:
         - name: mid
-          in: query
+          in: path
           description: Metabolite primary ID
           required: true
           schema:

@@ -5,13 +5,9 @@ import {getApiCaller} from "./apiCaller";
 
 function* handleFetch(action) {
   try {
-    //yield delay(2000);
-
-    // console.log('saga action', action)
-
     const res = yield call(
       getApiCaller(),
-      `GET metabolites?mid=${action.mid}`
+      `GET metabolites/${action.mid}`
     );
 
     yield put({type: GET_METABOLITE_SUCCESS, metabolite: res.metabolite});

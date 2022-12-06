@@ -11,8 +11,8 @@ def get_metabolite(meta_id):
         response = table.get_item( Key={'mid': meta_id} )
 
         if response is None or 'Item' not in response:
-            return {"messages": [], "conids": {}}
+            return None
 
         return response['Item']
     except ClientError:
-        return {"messages": [], "conids": {}}
+        return None
