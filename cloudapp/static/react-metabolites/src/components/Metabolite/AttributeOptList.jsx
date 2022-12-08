@@ -1,10 +1,13 @@
 import React from 'react'
-import { CopyBox } from './CopyBox';
+import { CopyBox } from '../Common/CopyBox'
 
-
-export const AttributeOptList = ({ attr, copybox }) => {
+/**
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
+export default function AttributeOptList({ attr, copybox }) {
   let wrap = (val) => <span>{ val }</span>;
-
 
   if (copybox) {
     wrap = (val) => <CopyBox value={val} />

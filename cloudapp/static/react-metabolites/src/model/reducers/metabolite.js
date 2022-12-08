@@ -6,6 +6,9 @@ import {
 
 
 const init_state = {
+  metabolites: {},
+
+  loaded_metabolite: null
 };
 
 export default (state = init_state, action) => {
@@ -13,19 +16,24 @@ export default (state = init_state, action) => {
     case GET_METABOLITE:
       return {
         ...state,
-        loading: true,
+        
+        api_error: null,
+        api_loading: action.mid,
       }
     case GET_METABOLITE_SUCCESS:
       return {
         ...state,
-        loading: false,
-        metabolite: action.metabolite
+
+        api_loading: false,
+        loaded_metabolite: action.metabolite,
+        metabolites: {...state.metabolites, [action.metabolite.mid]: action.metabolite}
       }
     case GET_METABOLITE_ERROR:
       return {
         ...state,
-        loading: false,
-        error: action.message,
+
+        api_loading: false,
+        api_error: action.message,
       }
     default:
       return state;

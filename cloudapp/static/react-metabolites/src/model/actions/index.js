@@ -1,6 +1,9 @@
 // Used for debug purposes
-export const SET_COUNTER = 'SET_COUNTER';
-export const SET_LOADING = "SET_LOADING";
+
+// Notifications handler
+export const NOTIF_SET_LOADING = "NOTIF_SET_LOADING";
+export const NOTIF_RESET = "NOTIF_RESET";
+//export const NOTIF_API_ERROR = "NOTIF_API_ERROR";
 
 // Load metabolite by pkey / attribute query / 
 export const GET_METABOLITE = "GET_METABOLITE";

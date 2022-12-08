@@ -1,4 +1,17 @@
 
+export const DATA_SOURCES = [
+  ["pubchem_id", "PubChem"],
+  ["chebi_id", "Chebi"],
+  ["hmdb_id", "HMDB"],
+  ["kegg_id", "Kegg"],
+  ["lipmaps_id", "Lipidmaps"],
+
+  ["cas_id", "CAS Ref"],
+  ["swisslipids_id", "SwissLipids"],
+  ["metlin_id", "Metlin"],
+  ["chemspider_id", "ChemSpider"],
+];
+
 /**
  * Checks if a Discovery attribute is contained in the second parameter.
  * Can compare scalar with set or scalar with scalar.
@@ -44,26 +57,4 @@ export function get_primary_name(metabolite) {
 
   // if all names are filtered (unlikely) then return shortest name
   return names_ordered[0]
-}
-
-
-
-export function colorize_moltext(text) {
-  const coloring = {
-      'C': '<b class="text-dark">{$}</b>',
-      'O': '<b class="text-danger">{$}</b>',
-      'N': '<b class="text-info">{$}</b>',
-      'P': '<b style="color:orange;">{$}</b>',
-      'S': '<b class="text-warning">{$}</b>',
-      'Cl': '<b class="text-success">{$}</b>',
-      'H': '<b style="color:#939393;">{$}</b>',
-      empty: '<i style="">{$}</i>'
-  };
-
-  return text.replace(/([A-Z]{1}[a-z]{0,2})(\d*)/gm, function(match, a,b){
-      if (coloring[a])
-          return coloring[a].replace('{$}', a+b);
-      else
-          return a+b;
-  });
 }

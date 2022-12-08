@@ -15,3 +15,19 @@
   max-height: 460px;
   overflow-y: scroll;
 }
+
+.img-dbicon {
+  width: 32px;
+
+  height: auto;
+  object-fit: contain;
+}
+
+.img-tool-icon {
+  width: 64px;
+  height: 64px;
+}
+
+.input-search-type {
+  max-width: 140px;
+}

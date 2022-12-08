@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
-import { Center } from '../components/Center';
+import { Center } from '../components/Common/Center';
 
+/**
+ * 404 Page
+ * @returns 
+ */
 const NotFound = () => <Center>
   <h1 className="display-1 fw-bold">404</h1>
 
