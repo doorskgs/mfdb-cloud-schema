@@ -1,8 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, redirect, useNavigate } from 'react-router-dom';
 import { Tooltip } from 'bootstrap';
 import { useEffect } from 'react';
 
 import { DATA_SOURCES } from '../utils/attributes';
+import MetaboliteSearch from '../components/Search/MetaboliteSearch';
+import { useDispatch } from 'react-redux';
+import { TEST_SPIKE } from '../model/actions';
 
 
 /**
@@ -19,9 +22,16 @@ const IndexPage = () => {
     });
   }, []);
 
+  const navigate = useNavigate();
+
+  const asd = () =>{
+    return navigate("/tesomsz");
+  }
+
+
   return <div className="page">
     <div className='container p-3'>
-      <div className='text-center'>
+      <div className='text-center mb-5'>
         <h1 className='display-5'>All metabolites in one api</h1>
         <p className='fs-5 lead'>
           Normalize your metabolite datasets, accessing all major databases, through a single API.<br/>
@@ -29,7 +39,7 @@ const IndexPage = () => {
         </p>
       </div>
 
-      <div className='text-center'>
+      <div className='text-center mb-4'>
         <Link to="/tools/python">
           <img src="/img/tools/l_py.png" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Getting started with the MIDB Python client package." className="rounded-circle mx-3 img-tool-icon" />
         </Link>
@@ -53,19 +63,9 @@ const IndexPage = () => {
       <div className="row">
         <div className="col-6 offset-3">
 
-          <div className="input-group input-group-lg mb-4">
-            <label className="input-group-text" htmlFor="input-search"><i className='ra ra-magnifying-glass'></i></label>
+          <MetaboliteSearch />
 
-            <select className="form-select input-search-type" id="input-search-type">
-              { DATA_SOURCES.map(([edb_tag, tag_name])=>(<option key={edb_tag} value={edb_tag}>{ tag_name }</option>)) }
-              <option value="inchi">InChI</option>
-              <option value="inchikey">InChI Key</option>
-            </select>
-
-            <input type="text" className="form-control" placeholder="Search database ID, InChI key, etc..." aria-label="Example text with button addon" id="input-search" />
-          </div>
-
-          <div className='row'>
+          <div className='row pt-3 pb-4'>
             <div className='col-4 text-center'>
               <i className='ra ra-2x ra-cube'></i>
 
@@ -86,11 +86,21 @@ const IndexPage = () => {
       </div>
     </div>
 
-    <div className="bg-light bg-light p-3">
+    <div className='container-fluid bg-light py-3'>
       <div className="row">
         <div className="col-6 offset-3">
-          <div className='row'>
-            <div className='col-8'>
+          todo: add cardinality & consistence statistics
+
+          <button className='btn btn-danger' onClick={asd}>Press me</button>
+        </div>
+      </div>      
+    </div>
+
+    <div className='container-fluid py-5'>
+      <div className='row'>
+        <div className="col-8 offset-2">
+          <div className='d-flex'>
+            <div className='flex-fill'>
               <h1>How to use</h1>
               <p>
                 Use our Python / RStudio packages to find missing metabolite database identifiers and chemical attributes in your dataframes. We support the following databases so far:
@@ -99,9 +109,10 @@ const IndexPage = () => {
                 Don't want to rely on our API? Use our Python packages to fill missing IDs on your local device. The local tool only takes a few minutes and 15GB disk space to set up and can be used instantly to resolve missing metabolite data.
               </p>
             </div>
-            <div className='col-4'>
+            <div className='border-start mx-3 ps-2'>
               <ul>
-                <li>InChI & InChI key</li>
+                <li>InChI</li>
+                <li>InChI key</li>
                 { DATA_SOURCES.map(([edb_tag, tag_name])=>(<li key={edb_tag}>{ tag_name }</li>)) }
               </ul>
             </div>
@@ -109,6 +120,7 @@ const IndexPage = () => {
         </div>
       </div>
     </div>
+
   </div>;
 }
 

@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { store } from './model/store'
 
 import Navbar from "./components/SiteElements/Navbar";
-import Notifications from "./components/SiteElements/Notifications";
 
 import IndexPage from "./Pages/IndexPage";
 import MetaboliteView from "./Pages/MetaboliteView";
@@ -15,8 +14,6 @@ import NotFound from "./Pages/NotFound";
 export const App = () => <Provider store={store}>
   <BrowserRouter>
     <Navbar />
-
-    <Notifications />
 
     <Routes>
       <Route path="/" element={<IndexPage/>}/>

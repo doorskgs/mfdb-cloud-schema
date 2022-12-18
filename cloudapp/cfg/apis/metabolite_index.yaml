@@ -10,7 +10,7 @@ servers:
 paths:
   /metabolites/{mid}:
     get:
-      summary: first attempt at getting metabolite
+      summary: get metabolite by primary ID (InChI Key or custom replacement MID)
       operationId: getMetabolite
       x-lambda:
         lambda-id: metabolites/metabolite
@@ -26,43 +26,208 @@ paths:
       parameters:
         - name: mid
           in: path
-          description: Metabolite primary ID
+          description: Metabolite primary ID. Usually this is an InChI Key, and rarely a custom assigned internal ID (rMID). Accepts multiple inchikeys and rmids if they exist for the metabolite
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: Metabolite view
+          description: Query result with metabolite view
 #          headers:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Metabolite"
+                $ref: "#/components/schemas/MetaboliteQuery"
+        '404':
+          description: Not found metabolite
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetaboliteQuery"
+        '400':
+          description: Invalid search request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         default:
           description: unexpected error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /metabolites/by/{edb_tag}/{edb_id}:
+    get:
+      summary: Query metabolite by external metabolome database ID. Also accepts InChI Key. E.g. edb_tag=chebi_id, edb_id=CHEBI:27732
+      operationId: queryMetabolite
+      x-lambda:
+        lambda-id: metabolites/metabolite
+#        role: asd
+#        layers:
+#          - asd
+#          - esd
+      x-integ:
+        requestParameters:
+          "query.edb_tag": "path.edb_tag"
+          "query.edb_id": "path.edb_id"
+      tags:
+        - metabolites
+      parameters:
+        - name: edb_tag
+          in: path
+          description: Attribute to query by
+          required: true
+          schema:
+            type: string
+            enum:
+              - inchikey
+              - formula # todo: ???
+              - pubchem_id
+              - chebi_id
+              - hmdb_id
+              - kegg_id
+              - lipmaps_id
+              - metlin_id
+              - cas_id
+              - chemspider_id
+        - name: edb_id
+          in: path
+          description: Attribute's value to filter by
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Query result with found metabolites
+#          headers:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetaboliteQuery"
+        '404':
+          description: Not found metabolite
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetaboliteQuery"
+        '400':
+          description: Invalid search request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /metabolites/struct/{struct_tag}:
+    post:
+      summary: Query metabolite by structure.
+      operationId: queryStructures
+      x-lambda:
+        lambda-id: metabolites/metabolite
+#        role: asd
+#        layers:
+#          - asd
+#          - esd
+      x-integ:
+        requestParameters:
+          "query.struct_tag": "path.struct_tag"
+      tags:
+        - metabolites
+      parameters:
+        - name: struct_tag
+          in: path
+          description: Structure type to query by. For Inchi Key, use /metabolites/{mid} route instead
+          required: true
+          schema:
+            type: string
+            enum:
+              - inchi
+              - smiles
+              - formula # todo: ???
+              - mol
+      responses:
+        '200':
+          description: Query result with found metabolites
+#          headers:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetaboliteQuery"
+        '404':
+          description: Not found metabolite
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetaboliteQuery"
+        '400':
+          description: Invalid search request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     Metabolite:
       type: object
       required:
-        - id
-        - name
+        - mid
+        - names
       properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        tag:
-          type: string
-    Metabolites:
-      type: array
-      items:
-        $ref: "#/components/schemas/Metabolite"
+        mid: {type: string}
+        names:
+          type: array
+          items: {type: string}
+          uniqueItems: true
+        mass: {type: number}
+        mi_mass: {type: number}
+        chebi_id: {type: string}
+        hmdb_id: {type: string}
+        pubchem_id: {type: string}
+        kegg_id: {type: string}
+        chemspider_id: {type: string}
+        lipmaps_id: {type: string}
+        metlin_id: {type: string}
+        swisslipids_id: {type: string}
+        drugbank_id: {type: string}
+        chembl_id: {type: string}
+        cas_id: {type: string}
+        inchikey: {type: string}
+        inchi: {type: string}
+        smiles: {type: string}
+        pname: {type: string}
+    MetaboliteQuery:
+      type: object
+      required:
+        - query
+        - metabolite
+        - mids
+      properties:
+        query:
+          type: object
+          properties:
+            attr: {type: string}
+            value: {type: string}
+            direct_hit: {type: boolean}
+          required:
+            - attr
+            - value
+            - direct_hit
+        metabolite:
+          $ref: "#/components/schemas/Metabolite"
+        mids:
+          type: array
+          items: {type: string}
     Error:
       type: object
       required:
@@ -72,6 +237,11 @@ components:
         code:
           type: integer
           format: int32
+        err:
+          type: string
+          enum:
+            - invalid_attr
+            - unauthorized
         message:
           type: string
 #  securitySchemes:

@@ -46,4 +46,12 @@ class BulkDiscovery(Process):
             if self.processed % 1000 == 0:
                 self.app.print_progress(self.processed)
 
+                # @TODO: @TEMPORAL CODE - - - - -
+                # if self.processed % 2000 == 0:
+                #     print('\n\n')
+                #     for k,v in self.disco.mgr.repo_edb.iamspeed.items():
+                #         print("   ", k, '--->',v)
+                #
+                #     break
+
             self.disco.clear()

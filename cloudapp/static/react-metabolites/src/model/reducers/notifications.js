@@ -1,4 +1,5 @@
 import {
+  NOTIF_API_ERROR,
   NOTIF_RESET,
   NOTIF_SET_LOADING,
 } from '../actions';
@@ -28,7 +29,17 @@ export default (state = init_state, action) => {
         api_loading: false,
         api_error: null
       }
+    case NOTIF_API_ERROR:
+      return {
+        ...state,
 
+        api_loading: false,
+        api_error: {
+          status: action.status,
+          message: action.message,
+          err: action.err,
+        }
+      }
     default:
       return state;
   }

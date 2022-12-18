@@ -57,7 +57,6 @@ export class HttpApi {
             body: method == 'GET' ? undefined : JSON.stringify(data),
             headers: headers
         }).then((resp)=>{
-            console.log(resp);
 
             if (resp.status == 200)
                 return resp.json();

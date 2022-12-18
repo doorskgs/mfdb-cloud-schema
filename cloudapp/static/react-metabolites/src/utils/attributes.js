@@ -36,13 +36,19 @@ export function disc_set(val) {
 }
 
 /**
- * Returns primary name. Returns shortest non-attribute name or synonym.
+ * Returns primary name or shortest non-attribute name or synonym.
  * 
- * This algorithm will be replaced by pubchem & chebi's IUPAC names in the future
+ * This algorithm is most often replaced by pubchem & chebi's IUPAC names on the backend (=> pname attribute)
  * @param {metabolite entry} metabolite 
  * @returns string
  */
 export function get_primary_name(metabolite) {
+  if (metabolite.pname) {
+    // if disc. alg backend has already resolved primary name, just return that
+    return Array.isArray(metabolite.pname) ? metabolite.pname[0] : metabolite.pname;
+  }
+
+  // return "least complex" name or synonym
   const names_ordered = [...metabolite.names].sort((a,b) => a.length-b.length);
 
   const excludes = new Set([

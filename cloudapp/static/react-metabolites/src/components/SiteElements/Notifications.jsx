@@ -8,12 +8,16 @@ import { Center } from '../Common/Center';
  * @returns 
  */
 export default function Notifications(props) {
-  //const missing_data = useSelector((state) => state.notifications.missing_data);
-  // const api_loading = useSelector((state) => state.notifications.api_loading);
-  // const api_error = useSelector((state) => state.notifications.api_error);
+  const api_loading = useSelector((state) => state.notifications.api_loading);
+  const api_error = useSelector((state) => state.notifications.api_error);
 
-  // console.log(api_loading)
+  if (api_error) {
+    return <div className='alert alert-danger'>
+      <b>API Error:</b> { api_error.message }
+    </div>
+  }
 
+  return <span></span>
   // if (api_loading) {
   //   return <Center>
   //       <div className="mb-4">
@@ -24,6 +28,4 @@ export default function Notifications(props) {
   //       <div className="loading-spinner" />
   //     </Center>
   // }
-
-  return <div>heyheyheyheyahey yaheyahey</div>
 }

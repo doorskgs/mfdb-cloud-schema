@@ -19,14 +19,15 @@ const MetaboliteView = () => {
   let { mid } = useParams();
   const dispatch = useDispatch();
   const metabolite = useSelector((state) => state.metabolites.metabolites[mid])
-  const api_loading = useSelector((state) => state.api_loading)
-
+  
+  const api_error = useSelector((state) => state.notifications.api_error)
+  
   useEffect(()=>{
     // @TODO: investigate if there's a better way to load api from page param (or <Link to />)
     dispatch({ type: GET_METABOLITE, mid: mid });
   }, [mid]);
 
-  if (api_loading || metabolite === undefined) {
+  if (metabolite === undefined) {
     // don't render while loading
     return <div className="container page">
       <h1 className='display-4 align-middle' style={{height: '65px', paddingTop:'18px'}}><div className='skelet text' style={{width: '120px', height:'28px'}}></div></h1>

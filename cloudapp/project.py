@@ -9,8 +9,7 @@ with project.project_builder('test api') as tc:
 
     tc.parse_envvars('aws')
 
-    #tc.add_layer('DkgsDal', ['dkgsdal'], folder='dkgsdal', single_file=True, in_house=True)
+    tc.add_layer('ChemblIkey', ['chembl_ikey'], folder='chembl_ikey', in_house=True)
 
     tc.build_service('dynamodb')
     tc.build_service('boto3')
-

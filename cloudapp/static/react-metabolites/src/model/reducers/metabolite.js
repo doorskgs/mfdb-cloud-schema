@@ -1,7 +1,10 @@
 import {
   GET_METABOLITE,
   GET_METABOLITE_SUCCESS,
-  GET_METABOLITE_ERROR
+  GET_METABOLITE_ERROR,
+  QUERY_METABOLITE,
+  QUERY_METABOLITE_SUCCESS,
+  QUERY_METABOLITE_ERROR,
 } from '../actions';
 
 
@@ -16,25 +19,20 @@ export default (state = init_state, action) => {
     case GET_METABOLITE:
       return {
         ...state,
-        
-        api_error: null,
-        api_loading: action.mid,
       }
     case GET_METABOLITE_SUCCESS:
       return {
         ...state,
-
-        api_loading: false,
         loaded_metabolite: action.metabolite,
         metabolites: {...state.metabolites, [action.metabolite.mid]: action.metabolite}
       }
     case GET_METABOLITE_ERROR:
       return {
         ...state,
-
-        api_loading: false,
-        api_error: action.message,
+        loaded_metabolite: null,
+        metabolites: {...state.metabolites, [action.mid]: null},
       }
+
     default:
       return state;
   }

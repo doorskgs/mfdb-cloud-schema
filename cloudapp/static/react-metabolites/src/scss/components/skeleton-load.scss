@@ -1,6 +1,4 @@
 .skelet {
-  background-color:$light;
-
   &.img-dbicon {
     width: 30px !important;
     height: 30px !important;
@@ -11,22 +9,24 @@
     height: 42px !important;
   }
 
+  &.anim {
+    background-color:$light;
+    animation: skelet-pulse 700ms linear infinite alternate;
+  }
+
   &.text {
     height: 16px;
   }
 }
 
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite;
-}
-
-@keyframes pulse {
-  50% {
-    opacity: .9;
+@keyframes skelet-pulse {
+  0% {
+    background-color: $light;
+  }
+  100% {
+    background-color: mix(white, $light, 24%);
   }
 }
-
 
 
 .inner-card{
