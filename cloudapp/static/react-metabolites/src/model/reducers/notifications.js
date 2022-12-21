@@ -1,13 +1,16 @@
 import {
-  NOTIF_API_ERROR,
   NOTIF_RESET,
   NOTIF_SET_LOADING,
+  NOTIF_FLASH,
+  NOTIF_REDIRECT
 } from '../actions';
 
 
 const init_state = {
   api_loading: false,
-  api_error: null,
+
+  notif_id: null,
+  notification: null
 };
 
 export default (state = init_state, action) => {
@@ -18,7 +21,7 @@ export default (state = init_state, action) => {
       return {
         ...state,
 
-        api_loading: action.data,
+        api_loading: action.data ?? false,
       }
 
     case NOTIF_RESET:
@@ -27,18 +30,20 @@ export default (state = init_state, action) => {
         ...state,
 
         api_loading: false,
-        api_error: null
+        notification: null
       }
-    case NOTIF_API_ERROR:
+    case NOTIF_FLASH:
       return {
         ...state,
 
-        api_loading: false,
-        api_error: {
-          status: action.status,
-          message: action.message,
-          err: action.err,
-        }
+        notif_id: Math.random(),
+        notification: { ...action }
+      }
+    case NOTIF_REDIRECT:
+      return {
+        ...state,
+
+        redirect_to: action.to
       }
     default:
       return state;

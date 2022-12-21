@@ -28,6 +28,8 @@ else:
 
     file_sources = ['hmdb', 'pubchem', 'chebi_lipmaps_kegg']
 
+filter_results = sys.argv[1:]
+
 ddb = boto3.resource('dynamodb')
 meta_table = ddb.Table('Metabolites')
 meta_table._truncate()

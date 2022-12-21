@@ -1,24 +1,22 @@
 import {HttpApi} from "../utils/httpapi";
 
-let api;
+const apis = {};
 
-export function createApiCaller(url, at) {
-  api = new HttpApi(url, at);
+export function createApiCaller(url, at, key=null) {
+  if (!key) key = 'default';
+  const api = new HttpApi(url, at);
+  apis[key] = api;
+  return api;
 }
 
 export function setToken(tk) {
   api.access_token = tk;
 }
 
-export function getApiCaller(group) {
-  // @TODO: refactor to use api
-  return api.request.bind(api);
+export function getApiCaller(key=null) {
+  if (!key)
+    key = 'default';
 
-  // return fetch(api.base_url+'/'+group, {
-  //   method: 'GET',
-  //   headers: {
-  //       'Content-Type': 'application/json',
-  //   }
-  // }).then(response => response.json())
-  //   .catch((error) => {throw error})
+  const api = apis[key];
+  return api.request.bind(api);
 }

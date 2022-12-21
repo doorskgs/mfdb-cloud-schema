@@ -10,5 +10,8 @@ import App from "./App";
 // @TODO: get cfg from env config
 createApiCaller('http://localhost:10050/api/v1');
 
+// one for pubchem as well
+createApiCaller('https://pubchem.ncbi.nlm.nih.gov/rest/pug/', null, 'pubchem').options = (opts)=>opts.headers = undefined;
+
 const root = createRoot(document.getElementById("root"));
 root.render(<App />)

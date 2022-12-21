@@ -22,13 +22,6 @@ const IndexPage = () => {
     });
   }, []);
 
-  const navigate = useNavigate();
-
-  const asd = () =>{
-    return navigate("/tesomsz");
-  }
-
-
   return <div className="page">
     <div className='container p-3'>
       <div className='text-center mb-5'>
@@ -90,8 +83,6 @@ const IndexPage = () => {
       <div className="row">
         <div className="col-6 offset-3">
           todo: add cardinality & consistence statistics
-
-          <button className='btn btn-danger' onClick={asd}>Press me</button>
         </div>
       </div>      
     </div>

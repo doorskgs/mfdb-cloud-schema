@@ -56,7 +56,17 @@ def query_by_edb_id(event, context):
     else:
         query_value = padding.pad_id(value, attr)
 
-    meta, mids = query_metabolite(attr, query_value)
+    try:
+        meta, mids = query_metabolite(attr, query_value)
+    except InvalidMDBAttrException as e:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({
+                "code": e.code,
+                "err": "invalid_attr",
+                "message": str(e),
+            })
+        }
 
     return metabolite_response(attr, query_value, meta, mids)
 
@@ -93,10 +103,10 @@ def query_by_struct(event, context):
             return metabolite_response(struct_tag, struct_value, meta, mids)
         elif struct_tag == 'mol':
             # @todo: implement MOL/SDF queries
-            raise dal.InvalidMDBAttrException("MOL queries are not implemented yet.")
+            raise InvalidMDBAttrException("MOL queries are not implemented yet.")
         else:
-            raise dal.InvalidMDBAttrException(f"Invalid struct query '{struct_tag}'")
-    except (dal.InvalidMDBAttrException, KeyError) as e:
+            raise InvalidMDBAttrException(f"Invalid struct query '{struct_tag}'")
+    except (InvalidMDBAttrException, KeyError) as e:
         err_code = e.code if hasattr(e, 'code') else dal.InvalidMDBAttrException.code
 
         return {
@@ -110,33 +120,22 @@ def query_by_struct(event, context):
 
 
 def query_metabolite(attr, query_value):
-    try:
-        mid_ref = dal.get_inchix_by_attr(attr, query_value)
+    mid_ref = dal.get_inchix_by_attr(attr, query_value)
 
-        if isinstance(mid_ref, list):
-            # Inchi/MID is only queried if a single item is found for query parameters
-            # this is to save network traffic
-            if len(mid_ref) == 1:
-                meta = dal.get_by_inchix(mid_ref[0])
-            else:
-                meta = None
-            mids = mid_ref
-        elif mid_ref is None:
-            meta = None
-            mids = []
+    if isinstance(mid_ref, list):
+        # Inchi/MID is only queried if a single item is found for query parameters
+        # this is to save network traffic
+        if len(mid_ref) == 1:
+            meta = dal.get_by_inchix(mid_ref[0])
         else:
-            meta = dal.get_by_inchix(mid_ref)
-            mids = [mid_ref]
-
-    except InvalidMDBAttrException as e:
-        return {
-            "statusCode": 400,
-            "body": json.dumps({
-                "code": e.code,
-                "err": "invalid_attr",
-                "message": str(e),
-            })
-        }
+            meta = None
+        mids = mid_ref
+    elif mid_ref is None:
+        meta = None
+        mids = []
+    else:
+        meta = dal.get_by_inchix(mid_ref)
+        mids = [mid_ref]
 
     return meta, mids
 

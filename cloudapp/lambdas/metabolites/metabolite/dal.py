@@ -40,9 +40,9 @@ def get_inchix_by_attr(attr, value) -> str | list | None:
     P = attr_prefix.get(attr, attr_prefix.get(attr + '_id'))
     if P is None:
         # nonexistent or non-queryable attr
-        raise InvalidMDBAttrException()
+        raise InvalidMDBAttrException(f"invalid attribute: {attr}")
     elif attr == 'inchikey':
-        raise InvalidMDBAttrException()
+        raise InvalidMDBAttrException("inchikey requested for inchikey")
 
     try:
         search_key = ':'.join([P, value])

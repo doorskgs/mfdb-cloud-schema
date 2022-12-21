@@ -19,9 +19,7 @@ const MetaboliteView = () => {
   let { mid } = useParams();
   const dispatch = useDispatch();
   const metabolite = useSelector((state) => state.metabolites.metabolites[mid])
-  
-  const api_error = useSelector((state) => state.notifications.api_error)
-  
+
   useEffect(()=>{
     // @TODO: investigate if there's a better way to load api from page param (or <Link to />)
     dispatch({ type: GET_METABOLITE, mid: mid });
