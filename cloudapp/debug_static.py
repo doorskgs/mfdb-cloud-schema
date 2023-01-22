@@ -13,6 +13,7 @@ if __name__ == "__main__":
 
     project.debug_builders = True
 
+    # todo: later: use S3 service to service static app
     with project.app_builder('FaaS:static_app', env=env) as app_builder:
         app = app_builder.build_app(env=env)
 
