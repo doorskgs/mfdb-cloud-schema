@@ -1,3 +1,3 @@
-tomcru~=0.2
+tomcru==1.0.0
 boto3
 tabulate
